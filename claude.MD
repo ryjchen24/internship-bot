@@ -159,7 +159,7 @@ source. Fable should write a new bot inspired by this pattern that adds:
   - `README.md` — setup + run instructions
 
 ## Behavior requirements
-- Poll every 15–30 minutes (`tasks.loop(minutes=20)`).
+- Poll every 20 minutes (`tasks.loop(minutes=20)`; GitHub Actions cron at :09/:29/:49).
 - On first run, pre-seed `seen_urls.json` with everything currently live
   so it doesn't dump hundreds of messages at once — only alert on things
   that appear in a run AFTER the bot has a baseline.

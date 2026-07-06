@@ -61,8 +61,8 @@ python bot.py
 ## Deployment (24/7, free): GitHub Actions
 
 This repo is set up to run **serverless** — no always-on bot process, no
-hosting bill. `.github/workflows/check.yml` runs `check.py` every ~20
-minutes on GitHub's runners:
+hosting bill. `.github/workflows/check.yml` runs `check.py` every 20
+minutes (scheduled at :09, :29, :49 UTC each hour) on GitHub's runners:
 
 1. Fetches both sources and runs the same filter pipeline as the bot.
 2. Posts new matches to the channel via the Discord REST API (bot token).

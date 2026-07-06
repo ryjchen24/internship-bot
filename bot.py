@@ -45,7 +45,11 @@ def find_matches(listings: list[dict]) -> list[dict]:
 
 
 def format_message(listing: dict, mention: str = "") -> str:
-    locations = ", ".join(listing["locations"]) or "Location not listed"
+    locs = listing["locations"]
+    if len(locs) > 6:
+        locations = ", ".join(locs[:6]) + f" (+{len(locs) - 6} more)"
+    else:
+        locations = ", ".join(locs) or "Location not listed"
     srcs = ", ".join(listing["source_repos"])
     lines = [
         f"🚨 **{listing['company']}** — {listing['title']}",
@@ -54,7 +58,13 @@ def format_message(listing: dict, mention: str = "") -> str:
         f"📦 Source: {srcs}",
     ]
     body = "\n".join(lines)
-    return f"{mention}\n{body}" if mention else body
+    if mention:
+        body = f"{mention}\n{body}"
+    # Discord hard-rejects messages over 2000 chars; an oversized alert would
+    # 400 on every run and never get marked seen.
+    if len(body) > 1990:
+        body = body[:1990] + "…"
+    return body
 
 
 def run_poll(seen: set[str]) -> list[dict]:

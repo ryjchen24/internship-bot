@@ -2,7 +2,10 @@ name: Internship check
 
 on:
   schedule:
-    - cron: "*/20 * * * *"   # every 20 minutes (GitHub may add a few min of jitter)
+    # Every 20 minutes, at :09/:29/:49 rather than :00/:20/:40 — the
+    # round-number minutes are GitHub's most congested cron slots and get
+    # the worst scheduling delays.
+    - cron: "9,29,49 * * * *"
   workflow_dispatch:          # allow manual runs from the Actions tab
 
 permissions:
@@ -16,9 +19,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
