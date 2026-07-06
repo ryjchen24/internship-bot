@@ -58,24 +58,43 @@ python bot.py
 > fetch starts 404ing, check github.com/vanshb03 for the new repo name and
 > update `VANSH_URL` in `sources.py`.
 
-## Deployment (24/7)
+## Deployment (24/7, free): GitHub Actions
 
-**Railway.app (recommended):** push this repo to GitHub (`.env` is
-gitignored), create a new Railway project from it, set `DISCORD_BOT_TOKEN`,
-`DISCORD_CHANNEL_ID` (and optionally `DISCORD_MENTION`) as environment
-variables. The included `Procfile` starts `python bot.py`. **Attach a Railway
-volume** and set `SEEN_URLS_FILE` to a path on that volume (e.g.
-`/data/seen_urls.json`) so redeploys don't wipe the alert history and re-post
-everything.
+This repo is set up to run **serverless** — no always-on bot process, no
+hosting bill. `.github/workflows/check.yml` runs `check.py` every ~20
+minutes on GitHub's runners:
 
-**Fly.io:** `fly launch`, then
-`fly secrets set DISCORD_BOT_TOKEN=... DISCORD_CHANNEL_ID=...`, mount a volume
-for the state file, and `fly deploy`.
+1. Fetches both sources and runs the same filter pipeline as the bot.
+2. Posts new matches to the channel via the Discord REST API (bot token).
+3. Posts a 🟢 heartbeat status line each run (proof of life even when there
+   are no new internships) — silence it by adding a repository **variable**
+   `HEARTBEAT=false` under Settings → Secrets and variables → Actions.
+4. Commits the updated `seen_urls.json` back to the repo, so state persists
+   between runs and nothing is re-posted.
+
+Required repository **secrets** (Settings → Secrets and variables → Actions):
+`DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID`.
+
+Trigger a run manually from the **Actions** tab ("Internship check" → Run
+workflow), or wait for the schedule. Note: on scheduled runs GitHub can add
+a few minutes of jitter, and Actions minutes are only unlimited/free on
+**public** repos.
+
+### Alternative: always-on hosting (Railway / Fly.io)
+
+`bot.py` still works as a persistent gateway bot if you prefer instant-ish
+hosting on Railway/Fly: set `DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID` (and
+optionally `DISCORD_MENTION`) as env vars, use the included `Procfile`, and
+put `SEEN_URLS_FILE` on a persistent volume (e.g. `/data/seen_urls.json`) so
+redeploys don't wipe alert history. Don't run both deployments at once —
+they'd double-post.
 
 ## Files
 
 | File | Purpose |
 |---|---|
+| `check.py` | One-shot check for GitHub Actions: fetch → filter → post → save state → exit |
+| `.github/workflows/check.yml` | Schedule (every 20 min), secrets wiring, state commit |
 | `bot.py` | Discord client, 20-min polling loop, `--dry-run` mode |
 | `sources.py` | Fetch + normalize both JSON sources, cross-source dedup |
 | `filters.py` | Target-company / CS-relevance / undergrad-eligibility logic |

@@ -1,5 +1,6 @@
 .env
-seen_urls.json
+# seen_urls.json is intentionally tracked: the GitHub Actions workflow
+# commits it back after each run to persist the already-alerted state.
 seen_urls.json.tmp
 __pycache__/
 *.pyc

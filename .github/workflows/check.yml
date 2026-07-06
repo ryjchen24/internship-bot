@@ -1,0 +1,48 @@
+name: Internship check
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"   # every 20 minutes (GitHub may add a few min of jitter)
+  workflow_dispatch:          # allow manual runs from the Actions tab
+
+permissions:
+  contents: write             # to commit seen_urls.json back
+
+concurrency:
+  group: internship-check
+  cancel-in-progress: false   # never kill a run mid-post; queue instead
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run internship check
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+          DISCORD_MENTION: "<@1413636786478911548>"
+          # Set a repo variable HEARTBEAT=false (Settings > Secrets and
+          # variables > Actions > Variables) to silence per-run status posts.
+          HEARTBEAT: ${{ vars.HEARTBEAT || 'true' }}
+        run: python check.py
+
+      - name: Commit updated seen state
+        run: |
+          if ! git diff --quiet -- seen_urls.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add seen_urls.json
+            git commit -m "Update seen_urls state"
+            git pull --rebase origin main
+            git push
+          fi
