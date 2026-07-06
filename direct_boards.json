@@ -1,0 +1,306 @@
+{
+ "AQR": {
+  "ats": "greenhouse",
+  "slug": "aqr"
+ },
+ "Affirm": {
+  "ats": "greenhouse",
+  "slug": "affirm"
+ },
+ "Airbnb": {
+  "ats": "greenhouse",
+  "slug": "airbnb"
+ },
+ "Airtable": {
+  "ats": "greenhouse",
+  "slug": "airtable"
+ },
+ "Akuna Capital": {
+  "ats": "greenhouse",
+  "slug": "akunacapital"
+ },
+ "Anthropic": {
+  "ats": "greenhouse",
+  "slug": "anthropic"
+ },
+ "AppLovin": {
+  "ats": "greenhouse",
+  "slug": "applovin"
+ },
+ "Asana": {
+  "ats": "greenhouse",
+  "slug": "asana"
+ },
+ "Belvedere Trading": {
+  "ats": "lever",
+  "slug": "belvederetrading"
+ },
+ "Block": {
+  "ats": "greenhouse",
+  "slug": "block"
+ },
+ "Brex": {
+  "ats": "greenhouse",
+  "slug": "brex"
+ },
+ "Cerebras": {
+  "ats": "ashby",
+  "slug": "cerebras"
+ },
+ "Character.AI": {
+  "ats": "ashby",
+  "slug": "character"
+ },
+ "Chime": {
+  "ats": "greenhouse",
+  "slug": "chime"
+ },
+ "Cloudflare": {
+  "ats": "greenhouse",
+  "slug": "cloudflare"
+ },
+ "Cohere": {
+  "ats": "ashby",
+  "slug": "cohere"
+ },
+ "Coinbase": {
+  "ats": "greenhouse",
+  "slug": "coinbase"
+ },
+ "Confluent": {
+  "ats": "ashby",
+  "slug": "confluent"
+ },
+ "CoreWeave": {
+  "ats": "greenhouse",
+  "slug": "coreweave"
+ },
+ "Coupang": {
+  "ats": "greenhouse",
+  "slug": "coupang"
+ },
+ "DRW": {
+  "ats": "greenhouse",
+  "slug": "drweng"
+ },
+ "Databricks": {
+  "ats": "greenhouse",
+  "slug": "databricks"
+ },
+ "Datadog": {
+  "ats": "greenhouse",
+  "slug": "datadog"
+ },
+ "DeepMind": {
+  "ats": "greenhouse",
+  "slug": "deepmind"
+ },
+ "Discord": {
+  "ats": "greenhouse",
+  "slug": "discord"
+ },
+ "Dropbox": {
+  "ats": "greenhouse",
+  "slug": "dropbox"
+ },
+ "Duolingo": {
+  "ats": "greenhouse",
+  "slug": "duolingo"
+ },
+ "Elastic": {
+  "ats": "greenhouse",
+  "slug": "elastic"
+ },
+ "Figma": {
+  "ats": "greenhouse",
+  "slug": "figma"
+ },
+ "Hudson River Trading": {
+  "ats": "greenhouse",
+  "slug": "wehrtyou"
+ },
+ "IMC": {
+  "ats": "greenhouse",
+  "slug": "imc"
+ },
+ "Instacart": {
+  "ats": "greenhouse",
+  "slug": "instacart"
+ },
+ "Jane Street": {
+  "ats": "greenhouse",
+  "slug": "janestreet"
+ },
+ "Jump Trading": {
+  "ats": "greenhouse",
+  "slug": "jumptrading"
+ },
+ "Lucid Motors": {
+  "ats": "greenhouse",
+  "slug": "lucidmotors"
+ },
+ "Lyft": {
+  "ats": "greenhouse",
+  "slug": "lyft"
+ },
+ "Mistral": {
+  "ats": "lever",
+  "slug": "mistral"
+ },
+ "MongoDB": {
+  "ats": "greenhouse",
+  "slug": "mongodb"
+ },
+ "New Relic": {
+  "ats": "greenhouse",
+  "slug": "newrelic"
+ },
+ "Notion": {
+  "ats": "ashby",
+  "slug": "notion"
+ },
+ "Okta": {
+  "ats": "greenhouse",
+  "slug": "okta"
+ },
+ "Old Mission": {
+  "ats": "greenhouse",
+  "slug": "oldmissioncapital"
+ },
+ "OpenAI": {
+  "ats": "ashby",
+  "slug": "openai"
+ },
+ "Optiver": {
+  "ats": "greenhouse",
+  "slug": "optiverus"
+ },
+ "PDT Partners": {
+  "ats": "greenhouse",
+  "slug": "pdtpartners"
+ },
+ "PagerDuty": {
+  "ats": "greenhouse",
+  "slug": "pagerduty"
+ },
+ "Palantir": {
+  "ats": "lever",
+  "slug": "palantir"
+ },
+ "Perplexity": {
+  "ats": "ashby",
+  "slug": "perplexity"
+ },
+ "Pinterest": {
+  "ats": "greenhouse",
+  "slug": "pinterest"
+ },
+ "Plaid": {
+  "ats": "ashby",
+  "slug": "plaid"
+ },
+ "Point72": {
+  "ats": "greenhouse",
+  "slug": "point72"
+ },
+ "Quadrature Capital": {
+  "ats": "greenhouse",
+  "slug": "quadraturecapital"
+ },
+ "Ramp": {
+  "ats": "ashby",
+  "slug": "ramp"
+ },
+ "Reddit": {
+  "ats": "greenhouse",
+  "slug": "reddit"
+ },
+ "Replit": {
+  "ats": "ashby",
+  "slug": "replit"
+ },
+ "Robinhood": {
+  "ats": "greenhouse",
+  "slug": "robinhood"
+ },
+ "Roblox": {
+  "ats": "greenhouse",
+  "slug": "roblox"
+ },
+ "Samsung Research": {
+  "ats": "greenhouse",
+  "slug": "samsungresearchamerica"
+ },
+ "Scale AI": {
+  "ats": "greenhouse",
+  "slug": "scaleai"
+ },
+ "Snowflake": {
+  "ats": "ashby",
+  "slug": "snowflake"
+ },
+ "SpaceX": {
+  "ats": "greenhouse",
+  "slug": "spacex"
+ },
+ "Spotify": {
+  "ats": "lever",
+  "slug": "spotify"
+ },
+ "Squarespace": {
+  "ats": "greenhouse",
+  "slug": "squarespace"
+ },
+ "Stripe": {
+  "ats": "greenhouse",
+  "slug": "stripe"
+ },
+ "Tower Research Capital": {
+  "ats": "greenhouse",
+  "slug": "towerresearchcapital"
+ },
+ "Twilio": {
+  "ats": "greenhouse",
+  "slug": "twilio"
+ },
+ "Twitch": {
+  "ats": "greenhouse",
+  "slug": "twitch"
+ },
+ "Vercel": {
+  "ats": "greenhouse",
+  "slug": "vercel"
+ },
+ "Virtu Financial": {
+  "ats": "greenhouse",
+  "slug": "virtu"
+ },
+ "Vivcourt": {
+  "ats": "greenhouse",
+  "slug": "vivcourt"
+ },
+ "Voleon": {
+  "ats": "ashby",
+  "slug": "voleon"
+ },
+ "Waymo": {
+  "ats": "greenhouse",
+  "slug": "waymo"
+ },
+ "Wealthfront": {
+  "ats": "lever",
+  "slug": "wealthfront"
+ },
+ "WorldQuant": {
+  "ats": "greenhouse",
+  "slug": "worldquant"
+ },
+ "XTX Markets": {
+  "ats": "greenhouse",
+  "slug": "xtxmarketstechnologies"
+ },
+ "xAI": {
+  "ats": "greenhouse",
+  "slug": "xai"
+ }
+}

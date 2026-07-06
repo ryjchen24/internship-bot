@@ -9,6 +9,10 @@ posts without a ping.
 **Sources**
 - [SimplifyJobs/Summer2026-Internships](https://github.com/SimplifyJobs/Summer2026-Internships) (rich schema: category + degrees fields)
 - [vanshb03/Summer2027-Internships](https://github.com/vanshb03/Summer2027-Internships) (leaner schema: CS relevance and degree level inferred from the title)
+- **Direct career boards** — `direct_boards.json` maps ~76 watchlist companies
+  to their public Greenhouse/Lever/Ashby APIs, polled every check, so postings
+  are caught straight from the company site without waiting for the community
+  trackers. Companies on custom/Workday career sites remain tracker-covered.
 
 Listings appearing in both trackers are de-duplicated by normalized URL
 (query params/UTM stripped), and the alert shows which source(s) it came from.
@@ -101,6 +105,7 @@ they'd double-post.
 | `check.py` | One-shot check for GitHub Actions: fetch → filter → post → save state → exit |
 | `.github/workflows/check.yml` | Schedule (every 20 min), secrets wiring, state commit |
 | `bot.py` | Discord client, 20-min polling loop, `--dry-run` mode |
-| `sources.py` | Fetch + normalize both JSON sources, cross-source dedup |
+| `sources.py` | Fetch + normalize trackers and direct career boards, cross-source dedup |
+| `direct_boards.json` | Verified company → Greenhouse/Lever/Ashby board mapping |
 | `filters.py` | Target-company / CS-relevance / undergrad-eligibility logic |
 | `state.py` | Load/save `seen_urls.json` (already-alerted URLs) |

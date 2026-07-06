@@ -112,6 +112,11 @@ def main() -> int:
                 f"📊 Scanned {len(listings)} listings • {len(matches)} CS matches "
                 f"({n_targets} watchlist ⭐) • **{sent} new alert(s)**"
             )
+        s = sources.LAST_STATS
+        lines.append(
+            f"🔎 Sources: Simplify {s.get('SimplifyJobs', 0)} • vansh {s.get('vanshb03', 0)} • "
+            f"{s.get('direct_boards', 0)} career boards ({s.get('direct_listings', 0)} intern posts)"
+        )
         lines.append(f"⏭️ Next check: <t:{next_check}:t> (<t:{next_check}:R>)")
         lines.append(sep)
         text = "\n".join(lines)
