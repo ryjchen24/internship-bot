@@ -85,15 +85,17 @@ def is_target_company(company_name: str) -> str | None:
 # CS relevance
 # ---------------------------------------------------------------------------
 
+# The Simplify tracker migrated its category taxonomy mid-2026; live data
+# contains BOTH the old long names and the new short ones, so accept both.
 CS_CATEGORIES = {
-    "Software Engineering",
-    "Data Science, AI & Machine Learning",
-    "Quantitative Finance",
-    "Hardware Engineering",
+    "Software Engineering", "Software",
+    "Data Science, AI & Machine Learning", "AI/ML/Data",
+    "Quantitative Finance", "Quant",
+    "Hardware Engineering", "Hardware",
 }
 
 # Categories where we fall back to title keywords instead of trusting the tag.
-FALLBACK_CATEGORIES = {"Product Management", "Other"}
+FALLBACK_CATEGORIES = {"Product Management", "Product", "Other"}
 
 CS_TITLE_PATTERN = re.compile(
     r"\b("
