@@ -1,0 +1,209 @@
+COMPANY TRACKING COVERAGE
+Generated: 2026-07-06 22:04 UTC
+
+Every company below is tracked continuously (checks every 20 minutes) via the
+two community trackers, which cover ALL companies:
+  - SimplifyJobs/Summer2026-Internships (github)
+  - vanshb03/Summer2027-Internships (github)
+The bot also alerts on every other company's CS/undergrad internships from
+those trackers; watchlist companies are starred and ping you directly.
+
+"DIRECT CAREER-SITE COVERAGE" additionally polls the company's own job board
+API (Greenhouse/Lever/Ashby) every 20 minutes, catching postings straight
+from the source without waiting for the community trackers to add them.
+"TRACKER-ONLY" companies use custom or Workday-style career sites with no
+public board API, so they are covered through the trackers alone.
+
+================================================================
+DIRECT CAREER-SITE COVERAGE (78 of 169 watchlist entries)
+================================================================
+  PDT Partners               greenhouse  https://boards.greenhouse.io/pdtpartners
+  Point72                    greenhouse  https://boards.greenhouse.io/point72
+  Jane Street                greenhouse  https://boards.greenhouse.io/janestreet
+  HRT                        greenhouse  https://boards.greenhouse.io/wehrtyou (via Hudson River Trading)
+  Hudson River Trading       greenhouse  https://boards.greenhouse.io/wehrtyou
+  Jump Trading               greenhouse  https://boards.greenhouse.io/jumptrading
+  Quadrature Capital         greenhouse  https://boards.greenhouse.io/quadraturecapital
+  Optiver                    greenhouse  https://boards.greenhouse.io/optiverus
+  Voleon                     ashby       https://jobs.ashbyhq.com/voleon
+  XTX Markets                greenhouse  https://boards.greenhouse.io/xtxmarketstechnologies
+  IMC                        greenhouse  https://boards.greenhouse.io/imc
+  DRW                        greenhouse  https://boards.greenhouse.io/drweng
+  Virtu Financial            greenhouse  https://boards.greenhouse.io/virtu
+  Tower Research Capital     greenhouse  https://boards.greenhouse.io/towerresearchcapital
+  AQR                        greenhouse  https://boards.greenhouse.io/aqr
+  WorldQuant                 greenhouse  https://boards.greenhouse.io/worldquant
+  Akuna Capital              greenhouse  https://boards.greenhouse.io/akunacapital
+  Vivcourt                   greenhouse  https://boards.greenhouse.io/vivcourt
+  Old Mission                greenhouse  https://boards.greenhouse.io/oldmissioncapital
+  Belvedere Trading          lever       https://jobs.lever.co/belvederetrading
+  Anthropic                  greenhouse  https://boards.greenhouse.io/anthropic
+  OpenAI                     ashby       https://jobs.ashbyhq.com/openai
+  Roblox                     greenhouse  https://boards.greenhouse.io/roblox
+  Airbnb                     greenhouse  https://boards.greenhouse.io/airbnb
+  Block                      greenhouse  https://boards.greenhouse.io/block
+  Stripe                     greenhouse  https://boards.greenhouse.io/stripe
+  Square                     greenhouse  https://boards.greenhouse.io/block (via Block)
+  Coinbase                   greenhouse  https://boards.greenhouse.io/coinbase
+  Notion                     ashby       https://jobs.ashbyhq.com/notion
+  Asana                      greenhouse  https://boards.greenhouse.io/asana
+  Coupang                    greenhouse  https://boards.greenhouse.io/coupang
+  Datadog                    greenhouse  https://boards.greenhouse.io/datadog
+  Spotify                    lever       https://jobs.lever.co/spotify
+  Dropbox                    greenhouse  https://boards.greenhouse.io/dropbox
+  Pinterest                  greenhouse  https://boards.greenhouse.io/pinterest
+  Plaid                      ashby       https://jobs.ashbyhq.com/plaid
+  Figma                      greenhouse  https://boards.greenhouse.io/figma
+  Discord                    greenhouse  https://boards.greenhouse.io/discord
+  Robinhood                  greenhouse  https://boards.greenhouse.io/robinhood
+  Lyft                       greenhouse  https://boards.greenhouse.io/lyft
+  Twitch                     greenhouse  https://boards.greenhouse.io/twitch
+  AppLovin                   greenhouse  https://boards.greenhouse.io/applovin
+  SpaceX                     greenhouse  https://boards.greenhouse.io/spacex
+  Palantir                   lever       https://jobs.lever.co/palantir
+  Scale AI                   greenhouse  https://boards.greenhouse.io/scaleai
+  Snowflake                  ashby       https://jobs.ashbyhq.com/snowflake
+  Databricks                 greenhouse  https://boards.greenhouse.io/databricks
+  Waymo                      greenhouse  https://boards.greenhouse.io/waymo
+  Airtable                   greenhouse  https://boards.greenhouse.io/airtable
+  Ramp                       ashby       https://jobs.ashbyhq.com/ramp
+  Brex                       greenhouse  https://boards.greenhouse.io/brex
+  Instacart                  greenhouse  https://boards.greenhouse.io/instacart
+  Affirm                     greenhouse  https://boards.greenhouse.io/affirm
+  Chime                      greenhouse  https://boards.greenhouse.io/chime
+  Wealthfront                lever       https://jobs.lever.co/wealthfront
+  Okta                       greenhouse  https://boards.greenhouse.io/okta
+  MongoDB                    greenhouse  https://boards.greenhouse.io/mongodb
+  Confluent                  ashby       https://jobs.ashbyhq.com/confluent
+  Elastic                    greenhouse  https://boards.greenhouse.io/elastic
+  Cloudflare                 greenhouse  https://boards.greenhouse.io/cloudflare
+  Twilio                     greenhouse  https://boards.greenhouse.io/twilio
+  Reddit                     greenhouse  https://boards.greenhouse.io/reddit
+  Duolingo                   greenhouse  https://boards.greenhouse.io/duolingo
+  Vercel                     greenhouse  https://boards.greenhouse.io/vercel
+  Perplexity                 ashby       https://jobs.ashbyhq.com/perplexity
+  xAI                        greenhouse  https://boards.greenhouse.io/xai
+  Mistral                    lever       https://jobs.lever.co/mistral
+  Cohere                     ashby       https://jobs.ashbyhq.com/cohere
+  Character.AI               ashby       https://jobs.ashbyhq.com/character
+  Lucid Motors               greenhouse  https://boards.greenhouse.io/lucidmotors
+  Samsung Research           greenhouse  https://boards.greenhouse.io/samsungresearchamerica
+  Squarespace                greenhouse  https://boards.greenhouse.io/squarespace
+  New Relic                  greenhouse  https://boards.greenhouse.io/newrelic
+  PagerDuty                  greenhouse  https://boards.greenhouse.io/pagerduty
+  DeepMind                   greenhouse  https://boards.greenhouse.io/deepmind
+  CoreWeave                  greenhouse  https://boards.greenhouse.io/coreweave
+  Cerebras                   ashby       https://jobs.ashbyhq.com/cerebras
+  Replit                     ashby       https://jobs.ashbyhq.com/replit
+
+================================================================
+TRACKER-ONLY COVERAGE (91 entries)
+================================================================
+  Renaissance Technologies
+  Radix Trading
+  TGS
+  Arrowstreet Capital
+  Citadel Securities
+  Ridgewater
+  Two Sigma
+  DE Shaw
+  D. E. Shaw
+  Five Rings
+  Susquehanna
+  SIG
+  Millennium
+  Squarepoint
+  G-Research
+  QRT
+  Wolverine Trading
+  CME Group
+  Nvidia
+  Netflix
+  Microsoft
+  Meta
+  Apple
+  Google
+  Tesla
+  Uber
+  DoorDash
+  PayPal
+  Bloomberg
+  Snap Inc
+  LinkedIn
+  Amazon
+  Adobe
+  Blackstone
+  eBay
+  X
+  GitHub
+  Oracle
+  Atlassian
+  Salesforce
+  Capital One
+  JPMorgan
+  JPMC
+  Morgan Stanley
+  Intel
+  Booking.com
+  BlackRock
+  IBM
+  Citi
+  Wells Fargo
+  Goldman Sachs
+  Booz Allen
+  Walmart
+  TCS
+  Tata Consultancy
+  HCLTech
+  Infosys
+  Anduril
+  Cruise
+  ByteDance
+  TikTok
+  Cisco
+  VMware
+  Rippling
+  Zillow
+  Epic Systems
+  Palo Alto Networks
+  CrowdStrike
+  HashiCorp
+  ServiceNow
+  Workday
+  Zoom
+  Canva
+  Applied Intuition
+  Rivian
+  AMD
+  ASML
+  Yelp
+  Etsy
+  Shopify
+  Wix
+  Splunk
+  Groq
+  Safe Superintelligence
+  SSI
+  Hugging Face
+  Weights & Biases
+  Qualcomm
+  Arm
+  Synopsys
+  Cadence
+
+================================================================
+NOTES
+================================================================
+- Alias entries share one board: HRT = Hudson River Trading,
+  DE Shaw = D. E. Shaw, SIG = Susquehanna, SSI = Safe Superintelligence,
+  JPMC = JPMorgan, Square = Block (Square is Block's brand),
+  TCS = Tata Consultancy.
+- Extra name spellings added so tracker entries aren't missed:
+  Snap, Citigroup, D.E. Shaw, Character AI.
+- "Citadel" (hedge fund) is not on the watchlist (only Citadel Securities),
+  but since the bot now alerts on ALL companies' CS internships, Citadel
+  postings in the trackers are alerted too (unstarred).
+- Safe Superintelligence's Ashby board currently lists 0 jobs, so it was
+  left tracker-only; re-probe if they start hiring interns.
+- Boards were verified live on 2026-07-06; if a company migrates ATS
+  platforms, update direct_boards.json.
