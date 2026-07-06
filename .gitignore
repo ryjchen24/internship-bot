@@ -1,0 +1,6 @@
+.env
+seen_urls.json
+seen_urls.json.tmp
+__pycache__/
+*.pyc
+.venv/

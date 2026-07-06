@@ -1,67 +1,82 @@
-# Discord Internship Alert Bot
+# CS Internship Discord Alert Bot
 
-Pings a Discord channel whenever one of your target companies posts a new
-internship, using the community-maintained [SimplifyJobs internship
-tracker](https://github.com/SimplifyJobs/Summer2026-Internships) as the data
-source. Runs automatically every 30 minutes via GitHub Actions — no server
-required.
+Watches two community-maintained internship trackers and pings a Discord
+channel whenever one of ~150 target companies posts a new **CS/software**
+internship that is **undergrad-eligible**.
+
+**Sources**
+- [SimplifyJobs/Summer2026-Internships](https://github.com/SimplifyJobs/Summer2026-Internships) (rich schema: category + degrees fields)
+- [vanshb03/Summer2027-Internships](https://github.com/vanshb03/Summer2027-Internships) (leaner schema: CS relevance and degree level inferred from the title)
+
+Listings appearing in both trackers are de-duplicated by normalized URL
+(query params/UTM stripped), and the alert shows which source(s) it came from.
 
 ## Setup
 
-### 1. Create a Discord webhook
-In your Discord server: right-click your target channel → **Edit Channel**
-→ **Integrations** → **Webhooks** → **New Webhook** → **Copy Webhook URL**.
-Keep this private.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env   # then fill in your token + channel ID
+```
 
-### 2. Create a GitHub repo
-Create a new **private** GitHub repository and push these files to it
-(`check_internships.py`, `seen_ids.json`, `.github/workflows/check.yml`).
+### Getting the Discord credentials
 
-### 3. Add your webhook as a secret
-In the repo: **Settings** → **Secrets and variables** → **Actions** →
-**New repository secret**.
-- Name: `DISCORD_WEBHOOK_URL`
-- Value: (paste the webhook URL from step 1)
+1. Go to https://discord.com/developers/applications → **New Application**.
+2. Under **Bot**, click **Reset Token** and copy it into `DISCORD_BOT_TOKEN` in `.env`.
+3. Under **OAuth2 → URL Generator**, check the `bot` scope and the
+   **Send Messages** + **View Channels** permissions, open the generated URL,
+   and invite the bot to your server.
+4. In Discord, enable Developer Mode (Settings → Advanced), right-click the
+   channel you want alerts in → **Copy Channel ID** → paste into
+   `DISCORD_CHANNEL_ID` in `.env`.
+5. Optional: set `DISCORD_MENTION=<@your_user_id>` to get pinged on every alert
+   (right-click your own name → Copy User ID).
 
-### 4. Enable Actions
-Go to the **Actions** tab of the repo and click **"I understand my
-workflows, go ahead and enable them"** if prompted. The workflow will now
-run automatically every 30 minutes.
+## Testing without Discord
 
-### 5. Test it
-Go to **Actions** → **Check Internships** → **Run workflow** to trigger it
-manually and confirm it works. Check the logs for how many new postings it
-found (should be 0 on first run since `seen_ids.json` was pre-seeded with
-everything currently listed).
+```bash
+python bot.py --dry-run
+```
 
-## Customizing
+Fetches both sources, runs the full filter pipeline, and prints every current
+match to the console — no token needed, no messages posted, no state written.
 
-- **Company list**: edit the `COMPANIES` list at the top of
-  `check_internships.py`.
-- **Check frequency**: edit the `cron` line in
-  `.github/workflows/check.yml` (format: minute hour day month weekday).
-- **Next internship season**: SimplifyJobs creates a new repo each year
-  (e.g. `Summer2027-Internships`). Update `LISTINGS_URL` in
-  `check_internships.py` when that happens.
+## Running
 
-## How it works
+```bash
+python bot.py
+```
 
-1. GitHub Actions runs `check_internships.py` on a schedule.
-2. The script downloads SimplifyJobs' `listings.json`, which is updated
-   automatically multiple times a day.
-3. It filters for company-name matches against your list (whole-word
-   matching, so short names like "SIG" won't false-positive on unrelated
-   words).
-4. Any listing ID not already in `seen_ids.json` gets posted to your
-   Discord webhook, then added to `seen_ids.json`.
-5. The workflow commits the updated `seen_ids.json` back to the repo so
-   state persists between runs.
+- Polls both sources every **20 minutes**.
+- **First run** pre-seeds `seen_urls.json` with everything currently live and
+  sends nothing — it only alerts on listings that appear *after* that baseline.
+- Fetch failures (network hiccup, repo renamed) are logged and retried on the
+  next poll; the process never crashes on one bad fetch.
 
-## Limitations
+> The vanshb03 repo is renamed every year (Summer2026 → Summer2027 → …). If its
+> fetch starts 404ing, check github.com/vanshb03 for the new repo name and
+> update `VANSH_URL` in `sources.py`.
 
-- Coverage depends on SimplifyJobs' tracker. It's actively maintained and
-  covers most of your list well, but a few niche quant firms (e.g. very
-  small/private shops) may be under-covered — check their careers pages
-  directly if a specific company matters a lot to you.
-- If SimplifyJobs changes their JSON file location or schema, the script
-  will need a small update.
+## Deployment (24/7)
+
+**Railway.app (recommended):** push this repo to GitHub (`.env` is
+gitignored), create a new Railway project from it, set `DISCORD_BOT_TOKEN`,
+`DISCORD_CHANNEL_ID` (and optionally `DISCORD_MENTION`) as environment
+variables. The included `Procfile` starts `python bot.py`. **Attach a Railway
+volume** and set `SEEN_URLS_FILE` to a path on that volume (e.g.
+`/data/seen_urls.json`) so redeploys don't wipe the alert history and re-post
+everything.
+
+**Fly.io:** `fly launch`, then
+`fly secrets set DISCORD_BOT_TOKEN=... DISCORD_CHANNEL_ID=...`, mount a volume
+for the state file, and `fly deploy`.
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `bot.py` | Discord client, 20-min polling loop, `--dry-run` mode |
+| `sources.py` | Fetch + normalize both JSON sources, cross-source dedup |
+| `filters.py` | Target-company / CS-relevance / undergrad-eligibility logic |
+| `state.py` | Load/save `seen_urls.json` (already-alerted URLs) |
