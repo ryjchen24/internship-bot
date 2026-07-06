@@ -80,8 +80,14 @@ def main() -> int:
         # shows red in the Actions history.
         log.error("Both sources returned nothing")
         if heartbeat:
-            post_message(token, channel_id,
-                         f"🔴 Internship check <t:{now}:f> — both sources failed to fetch; will retry next run.")
+            sep = "─" * 28
+            post_message(token, channel_id, "\n".join([
+                sep,
+                "🔴 **Internship Check — FAILED**",
+                f"▶️ Ran: <t:{now}:T>",
+                "⚠️ Both sources failed to fetch; will retry next run",
+                sep,
+            ]))
         return 1
 
     first_run = not state.state_exists()
@@ -109,19 +115,24 @@ def main() -> int:
     if heartbeat:
         done = int(time.time())
         event = os.environ.get("GITHUB_EVENT_NAME", "local")
+        sep = "─" * 28
+        lines = [sep, "🟢 **Internship Check**"]
         if event == "schedule":
             tick = scheduled_tick(now)
             delay = now - tick
-            timing = (f"cron <t:{tick}:T> → started <t:{now}:T> "
-                      f"(delay {delay // 60}m{delay % 60:02d}s) → posted <t:{done}:T>")
+            lines += [
+                f"🕐 Cron tick: <t:{tick}:T>",
+                f"▶️ Started: <t:{now}:T>  (delay {delay // 60}m{delay % 60:02d}s)",
+            ]
         else:
-            timing = f"{event} run, started <t:{now}:T>, posted <t:{done}:T>"
+            lines.append(f"▶️ Started: <t:{now}:T>  ({event} run)")
+        lines.append(f"📤 Posted: <t:{done}:T>")
         if first_run:
-            text = (f"🟢 Internship bot baseline created — {timing} — "
-                    f"{len(seen)} current listings recorded; alerts start next run.")
+            lines.append(f"📊 Baseline created: {len(seen)} current listings recorded — alerts start next run")
         else:
-            text = (f"🟢 Internship check — {timing} — scanned {len(listings)} listings, "
-                    f"{len(matches)} matches on watchlist, {sent} new alert(s).")
+            lines.append(f"📊 Scanned {len(listings)} listings • {len(matches)} watchlist matches • **{sent} new alert(s)**")
+        lines.append(sep)
+        text = "\n".join(lines)
         try:
             post_message(token, channel_id, text)
         except requests.RequestException as exc:
