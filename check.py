@@ -30,22 +30,9 @@ log = logging.getLogger("check")
 
 DISCORD_API = "https://discord.com/api/v10"
 
-# Must match the cron in .github/workflows/check.yml ("9,29,49 * * * *").
-SCHEDULE_MINUTES = (9, 29, 49)
-
-
-def scheduled_tick(now_ts: int) -> int:
-    """The most recent cron tick at or before now — what time this run was
-    *supposed* to start, so the heartbeat can show GitHub's scheduling delay."""
-    from datetime import datetime, timedelta, timezone
-
-    now = datetime.fromtimestamp(now_ts, tz=timezone.utc)
-    candidates = [now.replace(minute=m, second=0, microsecond=0) for m in SCHEDULE_MINUTES]
-    past = [c for c in candidates if c <= now]
-    if past:
-        return int(max(past).timestamp())
-    prev_hour = now - timedelta(hours=1)
-    return int(prev_hour.replace(minute=SCHEDULE_MINUTES[-1], second=0, microsecond=0).timestamp())
+# Timing comes from the workflow's own sleep loop (see check.yml), so this is
+# only used to tell the reader when to expect the next heartbeat.
+INTERVAL_MINUTES = 20
 
 
 def post_message(token: str, channel_id: str, content: str) -> None:
@@ -114,23 +101,18 @@ def main() -> int:
 
     if heartbeat:
         done = int(time.time())
-        event = os.environ.get("GITHUB_EVENT_NAME", "local")
+        next_check = done + INTERVAL_MINUTES * 60
         sep = "─" * 28
-        lines = [sep, "🟢 **Internship Check**"]
-        if event == "schedule":
-            tick = scheduled_tick(now)
-            delay = now - tick
-            lines += [
-                f"🕐 Cron tick: <t:{tick}:T>",
-                f"▶️ Started: <t:{now}:T>  (delay {delay // 60}m{delay % 60:02d}s)",
-            ]
-        else:
-            lines.append(f"▶️ Started: <t:{now}:T>  ({event} run)")
-        lines.append(f"📤 Posted: <t:{done}:T>")
+        n_targets = sum(1 for m in matches if m.get("is_target"))
+        lines = [sep, "🟢 **Internship Check**", f"▶️ Checked: <t:{now}:T>"]
         if first_run:
-            lines.append(f"📊 Baseline created: {len(seen)} current listings recorded — alerts start next run")
+            lines.append(f"📊 Baseline created: {len(seen)} current listings recorded — alerts start next check")
         else:
-            lines.append(f"📊 Scanned {len(listings)} listings • {len(matches)} watchlist matches • **{sent} new alert(s)**")
+            lines.append(
+                f"📊 Scanned {len(listings)} listings • {len(matches)} CS matches "
+                f"({n_targets} watchlist ⭐) • **{sent} new alert(s)**"
+            )
+        lines.append(f"⏭️ Next check: <t:{next_check}:t> (<t:{next_check}:R>)")
         lines.append(sep)
         text = "\n".join(lines)
         try:

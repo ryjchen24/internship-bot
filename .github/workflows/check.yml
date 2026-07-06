@@ -1,23 +1,29 @@
 name: Internship check
 
+# GitHub's cron is best-effort and routinely skips/delays ticks, so precise
+# 20-minute timing can't come from the scheduler. Instead each run is a
+# ~5.3-hour "chain link" that checks every 20 minutes on its own sleep
+# timer, then dispatches the next link. The cron is only a watchdog: if the
+# chain ever dies, the next tick that does fire restarts it. The concurrency
+# group guarantees only one link runs at a time.
+
 on:
   schedule:
-    # Every 20 minutes, at :09/:29/:49 rather than :00/:20/:40 — the
-    # round-number minutes are GitHub's most congested cron slots and get
-    # the worst scheduling delays.
-    - cron: "9,29,49 * * * *"
-  workflow_dispatch:          # allow manual runs from the Actions tab
+    - cron: "9,29,49 * * * *"   # watchdog only — real timing is the sleep loop
+  workflow_dispatch:
 
 permissions:
-  contents: write             # to commit seen_urls.json back
+  contents: write               # commit seen_urls.json back
+  actions: write                # dispatch the next chain link
 
 concurrency:
   group: internship-check
-  cancel-in-progress: false   # never kill a run mid-post; queue instead
+  cancel-in-progress: false
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v5
 
@@ -29,23 +35,28 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run internship check
+      - name: Check every 20 minutes (16 checks per chain link)
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
           DISCORD_MENTION: "<@1413636786478911548>"
-          # Set a repo variable HEARTBEAT=false (Settings > Secrets and
-          # variables > Actions > Variables) to silence per-run status posts.
           HEARTBEAT: ${{ vars.HEARTBEAT || 'true' }}
-        run: python check.py
-
-      - name: Commit updated seen state
         run: |
-          if ! git diff --quiet -- seen_urls.json; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add seen_urls.json
-            git commit -m "Update seen_urls state"
-            git pull --rebase origin main
-            git push
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 1 16); do
+            echo "=== check $i/16 at $(date -u) ==="
+            python check.py || echo "check $i failed; continuing"
+            if ! git diff --quiet -- seen_urls.json; then
+              git add seen_urls.json
+              git commit -m "Update seen_urls state"
+              git pull --rebase origin main && git push || echo "state push failed; retrying next check"
+            fi
+            if [ "$i" -lt 16 ]; then sleep 1200; fi
+          done
+
+      - name: Dispatch next chain link
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run check.yml --ref main

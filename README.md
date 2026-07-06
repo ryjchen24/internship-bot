@@ -1,8 +1,10 @@
 # CS Internship Discord Alert Bot
 
-Watches two community-maintained internship trackers and pings a Discord
-channel whenever one of ~150 target companies posts a new **CS/software**
-internship that is **undergrad-eligible**.
+Watches two community-maintained internship trackers and posts to a Discord
+channel whenever a new **CS/software**, **undergrad-eligible** internship
+appears — any company. Listings from the ~150 watchlist companies in
+`filters.py` are starred (⭐) and ping you with an @mention; everything else
+posts without a ping.
 
 **Sources**
 - [SimplifyJobs/Summer2026-Internships](https://github.com/SimplifyJobs/Summer2026-Internships) (rich schema: category + degrees fields)
@@ -61,24 +63,27 @@ python bot.py
 ## Deployment (24/7, free): GitHub Actions
 
 This repo is set up to run **serverless** — no always-on bot process, no
-hosting bill. `.github/workflows/check.yml` runs `check.py` every 20
-minutes (scheduled at :09, :29, :49 UTC each hour) on GitHub's runners:
+hosting bill. GitHub's cron scheduler is best-effort (it routinely skips or
+delays ticks), so `.github/workflows/check.yml` does NOT rely on it for
+timing: each workflow run is a **~5.3-hour chain link** that runs `check.py`
+every 20 minutes on an internal `sleep` timer (16 checks per link), then
+dispatches the next link. The cron entry is only a watchdog that restarts
+the chain if it ever dies. Each check:
 
 1. Fetches both sources and runs the same filter pipeline as the bot.
 2. Posts new matches to the channel via the Discord REST API (bot token).
-3. Posts a 🟢 heartbeat status line each run (proof of life even when there
-   are no new internships) — silence it by adding a repository **variable**
-   `HEARTBEAT=false` under Settings → Secrets and variables → Actions.
+3. Posts a 🟢 heartbeat block (proof of life even with no new internships)
+   with a "next check" countdown — silence heartbeats by adding a repository
+   **variable** `HEARTBEAT=false` under Settings → Secrets and variables →
+   Actions.
 4. Commits the updated `seen_urls.json` back to the repo, so state persists
-   between runs and nothing is re-posted.
+   and nothing is re-posted.
 
 Required repository **secrets** (Settings → Secrets and variables → Actions):
 `DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID`.
 
-Trigger a run manually from the **Actions** tab ("Internship check" → Run
-workflow), or wait for the schedule. Note: on scheduled runs GitHub can add
-a few minutes of jitter, and Actions minutes are only unlimited/free on
-**public** repos.
+Start the chain manually from the **Actions** tab ("Internship check" → Run
+workflow). Actions minutes are only unlimited/free on **public** repos.
 
 ### Alternative: always-on hosting (Railway / Fly.io)
 

@@ -31,15 +31,17 @@ POLL_MINUTES = 20
 
 
 def find_matches(listings: list[dict]) -> list[dict]:
-    """Run the full filter pipeline over merged listings."""
+    """Run the filter pipeline over merged listings.
+
+    Every CS-relevant, undergrad-eligible listing is a match; the ones from
+    watchlist companies get is_target=True (starred + @mention in Discord)."""
     matches = []
     for listing in listings:
-        if not is_target_company(listing["company"]):
-            continue
         if not is_cs_relevant(listing["title"], listing["category"]):
             continue
         if not is_undergrad_eligible(listing["title"], listing["degrees"]):
             continue
+        listing["is_target"] = is_target_company(listing["company"]) is not None
         matches.append(listing)
     return matches
 
@@ -51,8 +53,13 @@ def format_message(listing: dict, mention: str = "") -> str:
     else:
         locations = ", ".join(locs) or "Location not listed"
     srcs = ", ".join(listing["source_repos"])
+    is_target = listing.get("is_target", False)
+    header = "⭐🚨" if is_target else "🚨"
+    # Only watchlist companies ping; everything else posts silently.
+    if not is_target:
+        mention = ""
     lines = [
-        f"🚨 **{listing['company']}** — {listing['title']}",
+        f"{header} **{listing['company']}** — {listing['title']}",
         f"📍 {locations}",
         f"🔗 {listing['url']}",
         f"📦 Source: {srcs}",
@@ -90,12 +97,13 @@ def dry_run() -> None:
     touches Discord or seen_urls.json."""
     listings = sources.fetch_all()
     matches = find_matches(listings)
+    targets = [m for m in matches if m["is_target"]]
     print(f"\nFetched {len(listings)} deduplicated active listings.")
-    print(f"{len(matches)} pass all filters (target company + CS + undergrad):\n")
-    for m in sorted(matches, key=lambda x: x["company"].lower()):
+    print(f"{len(matches)} pass the CS + undergrad filters ({len(targets)} from watchlist companies):\n")
+    for m in sorted(matches, key=lambda x: (not x["is_target"], x["company"].lower())):
         print(format_message(m))
         print("-" * 60)
-    print(f"\nTotal matches: {len(matches)}")
+    print(f"\nTotal matches: {len(matches)} ({len(targets)} watchlist ⭐)")
 
 
 def run_bot() -> None:
