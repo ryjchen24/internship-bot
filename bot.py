@@ -57,6 +57,11 @@ def format_message(listing: dict, mention: str = "") -> str:
         f"🔗 {listing['url']}",
         f"📦 Source: {srcs}",
     ]
+    if listing.get("date_posted"):
+        ts = int(listing["date_posted"])
+        # <t:..:f> renders in the reader's local timezone; :R is relative
+        # ("2 hours ago") — shows how fast the tracker->alert pipeline was.
+        lines.insert(1, f"🕐 Posted <t:{ts}:f> (<t:{ts}:R>)")
     body = "\n".join(lines)
     if mention:
         body = f"{mention}\n{body}"

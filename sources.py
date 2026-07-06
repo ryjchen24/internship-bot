@@ -70,6 +70,7 @@ def _normalize(raw: dict, source_repo: str) -> dict | None:
         "source_repo": source_repo,
         "category": raw.get("category"),   # None for vansh
         "degrees": raw.get("degrees"),     # None for vansh
+        "date_posted": raw.get("date_posted") or raw.get("date_updated"),
     }
 
 

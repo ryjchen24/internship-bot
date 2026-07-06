@@ -30,6 +30,23 @@ log = logging.getLogger("check")
 
 DISCORD_API = "https://discord.com/api/v10"
 
+# Must match the cron in .github/workflows/check.yml ("9,29,49 * * * *").
+SCHEDULE_MINUTES = (9, 29, 49)
+
+
+def scheduled_tick(now_ts: int) -> int:
+    """The most recent cron tick at or before now — what time this run was
+    *supposed* to start, so the heartbeat can show GitHub's scheduling delay."""
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime.fromtimestamp(now_ts, tz=timezone.utc)
+    candidates = [now.replace(minute=m, second=0, microsecond=0) for m in SCHEDULE_MINUTES]
+    past = [c for c in candidates if c <= now]
+    if past:
+        return int(max(past).timestamp())
+    prev_hour = now - timedelta(hours=1)
+    return int(prev_hour.replace(minute=SCHEDULE_MINUTES[-1], second=0, microsecond=0).timestamp())
+
 
 def post_message(token: str, channel_id: str, content: str) -> None:
     url = f"{DISCORD_API}/channels/{channel_id}/messages"
@@ -56,8 +73,8 @@ def main() -> int:
         log.error("DISCORD_BOT_TOKEN and DISCORD_CHANNEL_ID must be set")
         return 1
 
+    now = int(time.time())  # process start, before fetching
     listings = sources.fetch_all()
-    now = int(time.time())
     if not listings:
         # Both sources failed — say so in the channel and fail the run so it
         # shows red in the Actions history.
@@ -90,11 +107,20 @@ def main() -> int:
     state.save_seen(seen)
 
     if heartbeat:
+        done = int(time.time())
+        event = os.environ.get("GITHUB_EVENT_NAME", "local")
+        if event == "schedule":
+            tick = scheduled_tick(now)
+            delay = now - tick
+            timing = (f"cron <t:{tick}:T> → started <t:{now}:T> "
+                      f"(delay {delay // 60}m{delay % 60:02d}s) → posted <t:{done}:T>")
+        else:
+            timing = f"{event} run, started <t:{now}:T>, posted <t:{done}:T>"
         if first_run:
-            text = (f"🟢 Internship bot baseline created <t:{now}:f> — "
+            text = (f"🟢 Internship bot baseline created — {timing} — "
                     f"{len(seen)} current listings recorded; alerts start next run.")
         else:
-            text = (f"🟢 Internship check <t:{now}:f> — scanned {len(listings)} listings, "
+            text = (f"🟢 Internship check — {timing} — scanned {len(listings)} listings, "
                     f"{len(matches)} matches on watchlist, {sent} new alert(s).")
         try:
             post_message(token, channel_id, text)
